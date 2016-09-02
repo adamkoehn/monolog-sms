@@ -17,7 +17,7 @@ Currently supported
 
 Install via [composer](https://getcomposer.org/) - In the terminal:
 ```bash
-composer require tylercd100/monolog-sms
+composer require synesisinc/monolog-sms dev-master
 ```
 
 ## Usage
@@ -36,7 +36,7 @@ For Twilio:
 use Tylercd100\Monolog\Handler\TwilioHandler;
 
 $handler = new TwilioHandler($secret,$sid,$fromPhoneNumber,$toPhoneNumber);
-$logger  = new Monolog\Logger('plivo.example');
+$logger  = new Monolog\Logger('twilio.example');
 $logger->pushHandler($handler);
 $logger->addCritical("Foo Bar!");
 ```
