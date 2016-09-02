@@ -1,5 +1,5 @@
 {
-    "name": "tylercd100/monolog-sms",
+    "name": "synesisinc/monolog-sms",
     "description": "A Monolog Handler for SMS messaging services such as Plivo and Twilio.",
     "keywords": [
         "monolog",
