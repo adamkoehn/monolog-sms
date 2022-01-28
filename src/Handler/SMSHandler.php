@@ -3,6 +3,7 @@
     namespace Tylercd100\Monolog\Handler;
 
     use Exception;
+    use Monolog\Formatter\FormatterInterface;
     use Monolog\Handler\SocketHandler;
     use Monolog\Logger;
     use Tylercd100\Monolog\Formatter\SMSFormatter;
@@ -54,7 +55,7 @@
          * @param string     $version    The Plivo API version (default PlivoHandler::API_V1)
          * @param int|string $limit      The character limit
          *
-         * @throws \Exception
+         * @throws Exception
          */
         public function __construct ($authToken, $authId, $fromNumber, $toNumber, $level = Logger::CRITICAL, $bubble = true, $useSSL = true, $host = 'api.plivo.com', $version = null, $limit = 160) {
 
@@ -82,14 +83,14 @@
          *
          * @return string
          */
-        abstract protected function buildContent ($record);
+        abstract protected function buildContent (array $record): string;
 
         /**
          * Builds the URL for the API call
          *
          * @return string
          */
-        abstract protected function buildRequestUrl ();
+        abstract protected function buildRequestUrl (): string;
 
         /**
          * {@inheritdoc}
@@ -98,7 +99,7 @@
          *
          * @return string
          */
-        protected function generateDataStream ($record) {
+        protected function generateDataStream (array $record): string {
             $content = $this->buildContent($record);
 
             return $this->buildHeader($content) . $content;
@@ -107,7 +108,7 @@
         /**
          * {@inheritdoc}
          */
-        protected function getDefaultFormatter () {
+        protected function getDefaultFormatter (): FormatterInterface {
             return new SMSFormatter();
         }
 
@@ -116,7 +117,7 @@
          *
          * @param array $record
          */
-        protected function write (array $record) {
+        protected function write (array $record): void {
             parent::write($record);
             $this->closeSocket();
         }
@@ -128,13 +129,13 @@
          *
          * @return string
          */
-        private function buildHeader ($content) {
+        private function buildHeader (string $content): string {
             $auth = base64_encode($this->authId . ":" . $this->authToken);
 
             $header = $this->buildRequestUrl();
 
-            $header .= "Host: {$this->host}\r\n";
-            $header .= "Authorization: Basic " . $auth . "\r\n";;
+            $header .= "Host: $this->host\r\n";
+            $header .= "Authorization: Basic " . $auth . "\r\n";
             $header .= "Content-Type: $this->contentType\r\n";
             $header .= "Content-Length: " . strlen($content) . "\r\n";
             $header .= "\r\n";

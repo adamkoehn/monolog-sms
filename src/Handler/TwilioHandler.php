@@ -28,11 +28,11 @@
          * @param string     $version    The Twilio API version (default TwilioHandler::API_V1)
          * @param int|string $limit      The character limit
          *
-         * @throws \Exception
+         * @throws Exception
          */
         public function __construct ($secret, $sid, $fromNumber, $toNumber, $level = Logger::CRITICAL, $bubble = true, $useSSL = true, $host = 'api.twilio.com', $version = self::API_V1, $limit = 160) {
             if ($version !== self::API_V1) {
-                throw new Exception('API Version \'{$version}\' is not supported!');
+                throw new Exception("API Version $version is not supported!");
             }
             parent::__construct($secret, $sid, $fromNumber, $toNumber, $level, $bubble, $useSSL, $host, $version, $limit);
 
@@ -46,7 +46,7 @@
          *
          * @return string
          */
-        protected function buildContent ($record) {
+        protected function buildContent (array $record): string {
             if (strlen($record['formatted']) > $this->limit) {
                 $record['formatted'] = substr($record['formatted'], 0, $this->limit);
             }
@@ -65,7 +65,7 @@
          *
          * @return string
          */
-        protected function buildRequestUrl () {
-            return "POST /{$this->version}/Accounts/{$this->authId}/Messages.json HTTP/1.1\r\n";
+        protected function buildRequestUrl (): string {
+            return "POST /$this->version/Accounts/$this->authId/Messages.json HTTP/1.1\r\n";
         }
     }
